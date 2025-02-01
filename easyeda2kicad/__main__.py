@@ -170,13 +170,13 @@ def valid_arguments(arguments: dict) -> bool:
     if arguments["footprint"]:
         if not os.path.isdir(f"{arguments['output']}.pretty"):
             os.mkdir(f"{arguments['output']}.pretty")
-            logging.info(f"Create {lib_name}.pretty footprint folder in {base_folder}")
+            logging.info(f"Created {lib_name}.pretty footprint folder in {base_folder}")
 
     # Create new 3d model folder if it does not exist
     if arguments["3d"]:
         if not os.path.isdir(f"{arguments['output']}.3dshapes"):
             os.mkdir(f"{arguments['output']}.3dshapes")
-            logging.info(f"Create {lib_name}.3dshapes 3D model folder in {base_folder}")
+            logging.info(f"Created {lib_name}.3dshapes 3D model folder in {base_folder}")
 
     # Create new symbol file if it does not exist
     if arguments["symbol"]:
@@ -196,7 +196,7 @@ def valid_arguments(arguments: dict) -> bool:
                     if kicad_version == KicadVersion.v6
                     else "EESchema-LIBRARY Version 2.4\n#encoding utf-8\n"
                 )
-            logging.info(f"Create {lib_name}.{lib_extension} symbol lib in {base_folder}")
+            logging.info(f"Created {lib_name}.{lib_extension} symbol lib in {base_folder}")
 
     return True
 
