@@ -128,14 +128,14 @@ class Exporter3dModelKicad:
     def export(self, lib_path: str) -> None:
         if self.output:
             with open(
-                file=f"{lib_path}.3dshapes/{self.output.name}.wrl",
+                file=f"{lib_path}/{self.output.name}.wrl",
                 mode="w",
                 encoding="utf-8",
             ) as my_lib:
                 my_lib.write(self.output.raw_wrl)
         if self.output_step:
             with open(
-                file=f"{lib_path}.3dshapes/{self.output.name}.step",
+                file=f"{lib_path}/{self.output.name}.step",
                 mode="wb",
             ) as my_lib:
                 my_lib.write(self.output_step)
