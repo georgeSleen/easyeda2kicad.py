@@ -174,9 +174,9 @@ def valid_arguments(arguments: dict) -> bool:
 
     # Create new 3d model folder if it does not exist
     if arguments["3d"]:
-        if not os.path.isdir(f"{arguments['output']}.3dshapes"):
-            os.mkdir(f"{arguments['output']}.3dshapes")
-            logging.info(f"Created {lib_name}.3dshapes 3D model folder in {base_folder}")
+        if not os.path.isdir(f"{arguments['output']}"):
+            os.mkdir(f"{arguments['output']}")
+            logging.info(f"Created {lib_name} 3D model folder in {base_folder}")
 
     # Create new symbol file if it does not exist
     if arguments["symbol"]:
