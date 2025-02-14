@@ -349,7 +349,7 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
         if exporter.output or exporter.output_step:
             filename_wrl = f"{exporter.output.name}.wrl"
             filename_step = f"{exporter.output.name}.step"
-            lib_path = f"{arguments['output']}.3dshapes"
+            lib_path = f"{arguments['output']}"
 
             logging.info(
                 f"Created 3D model for ID: {component_id}\n"
