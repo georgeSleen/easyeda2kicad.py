@@ -138,7 +138,7 @@ class EasyedaSymbolImporter:
             if designator in easyeda_handlers:
                 easyeda_handlers[designator](line, new_ee_symbol)
             else:
-                logging.warning(f"Unknow symbol designator : {designator}")
+                logging.warning(f"Unknown symbol designator : {designator}")
 
         return new_ee_symbol
 
@@ -224,7 +224,7 @@ class EasyedaFootprintImporter:
             elif ee_designator == "SOLIDREGION":
                 ...
             else:
-                logging.warning(f"Unknow footprint designator : {ee_designator}")
+                logging.warning(f"Unknown footprint designator : {ee_designator}")
 
         return new_ee_footprint
 
