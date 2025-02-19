@@ -21,6 +21,7 @@ from easyeda2kicad.helpers import (
     id_already_in_symbol_lib,
     set_logger,
     update_component_in_symbol_lib_file,
+    windows_to_unix_in_place
 )
 from easyeda2kicad.kicad.export_kicad_3d_model import Exporter3dModelKicad
 from easyeda2kicad.kicad.export_kicad_footprint import ExporterFootprintKicad
@@ -260,6 +261,10 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
 
     # ---------------- SYMBOL ----------------
     if arguments["symbol"]:
+        # Problems occur with CRLF (windows) style line terminators
+        # This script changes all CRLF line terminators to LF (unix) style line terminators
+        windows_to_unix_in_place(f"{arguments['output']}.{sym_lib_ext}")
+
         importer = EasyedaSymbolImporter(easyeda_cp_cad_data=cad_data)
         easyeda_symbol: EeSymbol = importer.get_symbol()
         # print(easyeda_symbol)
