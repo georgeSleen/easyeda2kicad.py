@@ -21,6 +21,7 @@ from easyeda2kicad.helpers import (
     id_already_in_symbol_lib,
     set_logger,
     update_component_in_symbol_lib_file,
+    windows_to_unix_in_place
 )
 from easyeda2kicad.kicad.export_kicad_3d_model import Exporter3dModelKicad
 from easyeda2kicad.kicad.export_kicad_footprint import ExporterFootprintKicad
@@ -167,32 +168,36 @@ def valid_arguments(arguments: dict) -> bool:
     arguments["output"] = f"{base_folder}/{lib_name}"
 
     # Create new footprint folder if it does not exist
-    if not os.path.isdir(f"{arguments['output']}.pretty"):
-        os.mkdir(f"{arguments['output']}.pretty")
-        logging.info(f"Create {lib_name}.pretty footprint folder in {base_folder}")
+    if arguments["footprint"]:
+        if not os.path.isdir(f"{arguments['output']}.pretty"):
+            os.mkdir(f"{arguments['output']}.pretty")
+            logging.info(f"Created {lib_name}.pretty footprint folder in {base_folder}")
 
-    # Create new 3d model folder if don't exist
-    if not os.path.isdir(f"{arguments['output']}.3dshapes"):
-        os.mkdir(f"{arguments['output']}.3dshapes")
-        logging.info(f"Create {lib_name}.3dshapes 3D model folder in {base_folder}")
+    # Create new 3d model folder if it does not exist
+    if arguments["3d"]:
+        if not os.path.isdir(f"{arguments['output']}"):
+            os.mkdir(f"{arguments['output']}")
+            logging.info(f"Created {lib_name} 3D model folder in {base_folder}")
 
-    lib_extension = "kicad_sym" if kicad_version == KicadVersion.v6 else "lib"
-    if not os.path.isfile(f"{arguments['output']}.{lib_extension}"):
-        with open(
-            file=f"{arguments['output']}.{lib_extension}", mode="w+", encoding="utf-8"
-        ) as my_lib:
-            my_lib.write(
-                dedent(
-                    """\
-                (kicad_symbol_lib
-                  (version 20211014)
-                  (generator https://github.com/uPesy/easyeda2kicad.py)
-                )"""
+    # Create new symbol file if it does not exist
+    if arguments["symbol"]:
+        lib_extension = "kicad_sym" if kicad_version == KicadVersion.v6 else "lib"
+        if not os.path.isfile(f"{arguments['output']}.{lib_extension}"):
+            with open(
+                file=f"{arguments['output']}.{lib_extension}", mode="w+", encoding="utf-8"
+            ) as my_lib:
+                my_lib.write(
+                    dedent(
+                        """\
+                    (kicad_symbol_lib
+                      (version 20211014)
+                      (generator https://github.com/uPesy/easyeda2kicad.py)
+                    )"""
+                    )
+                    if kicad_version == KicadVersion.v6
+                    else "EESchema-LIBRARY Version 2.4\n#encoding utf-8\n"
                 )
-                if kicad_version == KicadVersion.v6
-                else "EESchema-LIBRARY Version 2.4\n#encoding utf-8\n"
-            )
-        logging.info(f"Create {lib_name}.{lib_extension} symbol lib in {base_folder}")
+            logging.info(f"Created {lib_name}.{lib_extension} symbol lib in {base_folder}")
 
     return True
 
@@ -256,6 +261,10 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
 
     # ---------------- SYMBOL ----------------
     if arguments["symbol"]:
+        # Problems occur with CRLF (windows) style line terminators
+        # This script changes all CRLF line terminators to LF (unix) style line terminators
+        windows_to_unix_in_place(f"{arguments['output']}.{sym_lib_ext}")
+
         importer = EasyedaSymbolImporter(easyeda_cp_cad_data=cad_data)
         easyeda_symbol: EeSymbol = importer.get_symbol()
         # print(easyeda_symbol)
@@ -345,7 +354,7 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
         if exporter.output or exporter.output_step:
             filename_wrl = f"{exporter.output.name}.wrl"
             filename_step = f"{exporter.output.name}.step"
-            lib_path = f"{arguments['output']}.3dshapes"
+            lib_path = f"{arguments['output']}"
 
             logging.info(
                 f"Created 3D model for ID: {component_id}\n"

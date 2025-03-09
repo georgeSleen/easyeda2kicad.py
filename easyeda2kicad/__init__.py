@@ -1,3 +1,3 @@
-__version__ = "0.8.0"
-__author__ = "uPesy"
-__email__ = "contact@upesy.com"
+__version__ = "0.8.1"
+__author__ = "uPesy + George Sleen"
+__email__ = "george@bluerobotics.com"

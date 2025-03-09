@@ -167,3 +167,23 @@ def get_middle_arc_pos(
     middle_x = center_x + radius * math.cos((angle_start + angle_end) / 2)
     middle_y = center_y + radius * math.sin((angle_start + angle_end) / 2)
     return middle_x, middle_y
+
+# Adapted from https://stackoverflow.com/questions/36422107/how-to-convert-crlf-to-lf-on-a-windows-machine-in-python
+
+WINDOWS_LINE_TERMINATION = b'\r\n'
+UNIX_LINE_TERMINATION = b'\n'
+
+def windows_to_unix_in_place(file_path: str) -> None:
+    """
+    Converts all CRLF line endings to LF line endings in place.
+
+    :param file_path: the path to the file to be updated
+    :return: nothing
+    """
+    with open(file_path, 'rb') as open_file:
+        content = open_file.read()
+
+    content = content.replace(WINDOWS_LINE_TERMINATION, UNIX_LINE_TERMINATION)
+
+    with open(file_path, 'wb') as open_file:
+        open_file.write(content)
